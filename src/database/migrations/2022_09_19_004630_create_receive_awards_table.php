@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\Award;
+use App\Models\Player;
+use App\Models\Season;
+use App\Models\Team;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,15 +17,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('receive_awards', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->integer('role')->default(1)->comment('1:一般 / 30:キャプテン / 100:管理者');
-            $table->dateTime('last_login_datetime')->nullable();
-            $table->rememberToken();
+            $table->foreignIdFor(Player::class);
+            $table->foreignIdFor(Team::class);
+            $table->foreignIdFor(Award::class);
+            $table->foreignIdFor(Season::class);
+            $table->text('memo')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -34,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('receive_awards');
     }
 };

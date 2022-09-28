@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\SkillLevel;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,15 +15,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('players', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->integer('role')->default(1)->comment('1:一般 / 30:キャプテン / 100:管理者');
-            $table->dateTime('last_login_datetime')->nullable();
-            $table->rememberToken();
+            $table->foreignIdFor(User::class)->nullable();
+            $table->string('name', 100);
+            $table->unsignedSmallInteger('number');
+            $table->foreignIdFor(SkillLevel::class);
+            $table->boolean('bd_flg')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('players');
     }
 };
